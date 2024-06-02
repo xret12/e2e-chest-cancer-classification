@@ -39,7 +39,7 @@ def read_yaml(path_to_yaml: Path) -> ConfigBox:
     
     
 @ensure_annotations
-def create_directories(path_to_directories: list, verbose=True):
+def create_directories(path_to_directories: list, ):
     """create list of directories
 
     Args:
@@ -47,8 +47,10 @@ def create_directories(path_to_directories: list, verbose=True):
         ignore_log (bool, optional): ignore if multiple dirs is to be created. Defaults to False.
     """
     for path in path_to_directories:
-        os.makedirs(path, exist_ok=True)
-        if verbose:
+        if os.path.exists(path):
+            logger.info(f"Path already exists: {path}")
+        else:
+            os.makedirs(path, exist_ok=True)
             logger.info(f"Created directory at: {path}")
 
 

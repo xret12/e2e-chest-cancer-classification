@@ -1,5 +1,7 @@
+from pathlib import Path
 from cnnClassifier.constants import *
-from cnnClassifier.entity.config_entity import DataIngestionConfig, PrepareBaseModelConfig
+from cnnClassifier.entity.config_entity import DataIngestionConfig, PrepareBaseModelConfig, \
+                                                TrainingConfig
 from cnnClassifier.utils.common import read_yaml, create_directories
 
 
@@ -32,14 +34,33 @@ class ConfigurationManager:
         create_directories([config.root_dir])
 
         prepare_base_model_config = PrepareBaseModelConfig(
-            root_dir = config.root_dir,
-            base_model_path = config.base_model_path,
-            updated_base_model_path = config.updated_base_model_path,
-            params_image_size = self.params.IMAGE_SIZE,
-            params_learning_rate = self.params.LEARNING_RATE,
-            params_include_top = self.params.INCLUDE_TOP,
-            params_weights = self.params.WEIGHTS,
-            params_classes = self.params.CLASSES
+            root_dir=config.root_dir,
+            base_model_path=config.base_model_path,
+            updated_base_model_path=config.updated_base_model_path,
+            params_image_size=self.params.IMAGE_SIZE,
+            params_learning_rate=self.params.LEARNING_RATE,
+            params_include_top=self.params.INCLUDE_TOP,
+            params_weights=self.params.WEIGHTS,
+            params_classes=self.params.CLASSES
         )
 
         return prepare_base_model_config
+    
+
+    def get_training_config(self) -> TrainingConfig:
+        training = self.config.training
+        prepare_base_model = self.config.prepare_base_model
+        create_directories([self.config.training.root_dir])
+
+        training_config = TrainingConfig(
+            root_dir=training.root_dir,
+            trained_model_path=training.trained_model_path,
+            updated_base_model_path = prepare_base_model.updated_base_model_path,
+            training_data=training.training_data,
+            params_epochs=self.params.EPOCHS,
+            params_batch_size=self.params.BATCH_SIZE,
+            params_is_augmentation=self.params.AUGMENTATION,
+            params_image_size=self.params.IMAGE_SIZE,
+        )
+
+        return training_config

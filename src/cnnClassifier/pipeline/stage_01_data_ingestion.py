@@ -19,7 +19,8 @@ class DataIngestionTrainingPipeline:
             data_ingestion = DataIngestion(config=data_ingestion_config)
             data_ingestion.download_file()
             data_ingestion.extract_zip_file()
-            logger.info(f">>>>>>>>>>>>>> {STAGE_NAME} COMPLETED <<<<<<<<<<<<<<<")
+            logger.info(f">>>>>>>>>>>>>> {STAGE_NAME} COMPLETED <<<<<<<<<<<<<<< \n")
+
 
         except Exception as e:
             logger.exception(f"Exception raised while running {STAGE_NAME}: {e}")
