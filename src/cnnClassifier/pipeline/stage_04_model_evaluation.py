@@ -18,9 +18,15 @@ class EvaluationPipeline:
             evaluation_config = config.get_evaluation_config()
             evaluation = Evaluation(config=evaluation_config)
             evaluation.evaluate()
-            evaluation.log_into_mlflow()
+            # evaluation.log_into_mlflow()
             logger.info(f">>>>>>>>>>>>>> {STAGE_NAME} COMPLETED <<<<<<<<<<<<<<<\n")
             
         except Exception as e:
             logger.exception(f"Exception raised while running {STAGE_NAME}: {e}")
             raise e
+        
+
+# for dvc pipeline tracking
+if __name__ == "__main__":
+    model_evaluation_pipeline = EvaluationPipeline()
+    model_evaluation_pipeline.main()

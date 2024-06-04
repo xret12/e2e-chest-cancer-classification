@@ -27,6 +27,10 @@ class DataIngestionTrainingPipeline:
             raise e
 
 
+# for dvc pipeline tracking
+if __name__ == "__main__":
+    data_ingestion_pipeline = DataIngestionTrainingPipeline()
+    data_ingestion_pipeline.main()
     
     
 

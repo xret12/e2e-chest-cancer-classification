@@ -24,3 +24,9 @@ class ModelTrainingPipeline:
         except Exception as e:
             logger.exception(f"Exception raised while running {STAGE_NAME}: {e}")
             raise e
+
+
+# for dvc pipeline tracking
+if __name__ == "__main__":
+    model_training_pipeline = ModelTrainingPipeline()
+    model_training_pipeline.main()
