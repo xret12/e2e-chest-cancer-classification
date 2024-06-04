@@ -1,7 +1,7 @@
 from pathlib import Path
 import tensorflow as tf
 
-from cnnClassifier.config.configuration import TrainingConfig
+from cnnClassifier.entity.config_entity import TrainingConfig
 
 
 class Training:

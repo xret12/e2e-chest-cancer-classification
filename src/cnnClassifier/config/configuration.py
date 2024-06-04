@@ -1,7 +1,7 @@
 from pathlib import Path
 from cnnClassifier.constants import *
 from cnnClassifier.entity.config_entity import DataIngestionConfig, PrepareBaseModelConfig, \
-                                                TrainingConfig
+                                                TrainingConfig, EvaluationConfig
 from cnnClassifier.utils.common import read_yaml, create_directories
 
 
@@ -64,3 +64,19 @@ class ConfigurationManager:
         )
 
         return training_config
+    
+
+    def get_evaluation_config(self) -> EvaluationConfig:
+        training = self.config.training
+        evaluation = self.config.evaluation
+        
+        evaluation_config = EvaluationConfig(
+            path_of_model=training.trained_model_path,
+            training_data=training.training_data,
+            all_params=self.params,
+            mlflow_uri=evaluation.mlflow_uri,
+            params_image_size=self.params.IMAGE_SIZE,
+            params_batch_size=self.params.BATCH_SIZE
+        )
+
+        return evaluation_config

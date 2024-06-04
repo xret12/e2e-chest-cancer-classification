@@ -12,3 +12,16 @@
 7. Update the pipeline
 8. Update the main.py
 9. Update the dvc.yaml
+
+
+## DAGSHUB Connection for MLFLOW (windows machine)
+- SET for windows / EXPORT for linux
+
+```
+MLFLOW_TRACKING_URI=https://dagshub.com/xret12/e2e-chest-cancer-classification.mlflow
+
+MLFLOW_TRACKING_USERNAME=xret12
+
+MLFLOW_TRACKING_PASSWORD=c05d9ad81ab52d7ad65f1197d91df0ab2f92d11f
+
+```
