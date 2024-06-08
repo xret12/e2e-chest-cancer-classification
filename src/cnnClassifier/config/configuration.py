@@ -38,7 +38,6 @@ class ConfigurationManager:
             base_model_path=config.base_model_path,
             updated_base_model_path=config.updated_base_model_path,
             params_image_size=self.params.IMAGE_SIZE,
-            params_learning_rate=self.params.LEARNING_RATE,
             params_include_top=self.params.INCLUDE_TOP,
             params_weights=self.params.WEIGHTS,
             params_classes=self.params.CLASSES
@@ -55,12 +54,14 @@ class ConfigurationManager:
         training_config = TrainingConfig(
             root_dir=training.root_dir,
             trained_model_path=training.trained_model_path,
+            trained_model_path_for_tracking=training.trained_model_path_for_tracking,
             updated_base_model_path = prepare_base_model.updated_base_model_path,
             training_data=training.training_data,
             params_epochs=self.params.EPOCHS,
             params_batch_size=self.params.BATCH_SIZE,
             params_is_augmentation=self.params.AUGMENTATION,
             params_image_size=self.params.IMAGE_SIZE,
+            params_learning_rate=self.params.LEARNING_RATE,
         )
 
         return training_config

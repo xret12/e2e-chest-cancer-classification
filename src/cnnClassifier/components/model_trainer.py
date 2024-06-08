@@ -1,6 +1,7 @@
 from pathlib import Path
 import tensorflow as tf
 
+from cnnClassifier import logger
 from cnnClassifier.entity.config_entity import TrainingConfig
 
 
@@ -11,7 +12,13 @@ class Training:
 
 
     def get_base_model(self):
-        self.model = tf.keras.models.load_model(self.config.updated_base_model_path)
+        self.model = tf.keras.models.load_model(self.config.updated_base_model_path, compile=False)
+        
+        self.model.compile(
+            optimizer=tf.keras.optimizers.SGD(learning_rate=self.config.params_learning_rate),
+            loss=tf.keras.losses.CategoricalCrossentropy(),
+            metrics=["accuracy", tf.keras.metrics.Precision(), tf.keras.metrics.Recall()]
+        )
 
 
     def train_valid_generator(self):
@@ -68,6 +75,9 @@ class Training:
         self.steps_per_epoch = self.train_generator.samples // self.train_generator.batch_size
         self.validation_steps = self.valid_generator.samples // self.valid_generator.batch_size
 
+        logger.info(f"Class indices (train): {self.train_generator.class_indices}")
+        logger.info(f"Class indices (valid): {self.valid_generator.class_indices}")
+
         self.model.fit(
             self.train_generator,
             epochs=self.config.params_epochs,
@@ -78,5 +88,10 @@ class Training:
 
         self.save_model(
             path=self.config.trained_model_path,
+            model=self.model
+        )
+        # self to another path for tracking in github
+        self.save_model(
+            path=self.config.trained_model_path_for_tracking,
             model=self.model
         )

@@ -25,8 +25,7 @@ class PrepareBaseModel:
     def _prepare_full_model(model: tf.keras.Model, 
                             classes: int, 
                             freeze_all: bool, 
-                            freeze_till: int,
-                            learnining_rate: float):
+                            freeze_till: int):
             if freeze_all: 
                 for layer in model.layers:
                     layer.trainable = False
@@ -36,21 +35,11 @@ class PrepareBaseModel:
 
             # The model output (output of the convolutional layers) is flattened to 1D
             flatten_in = tf.keras.layers.Flatten()(model.output)
-            # Dense layer is applied on the output of flatten_in
-            prediction = tf.keras.layers.Dense(
-                units=classes,
-                activation="softmax"
-            )(flatten_in)  
+            prediction = tf.keras.layers.Dense(classes, activation='softmax')(flatten_in)
 
             full_model = tf.keras.models.Model(
                 inputs=model.input,
-                outputs=prediction
-            )
-
-            full_model.compile(
-                optimizer=tf.keras.optimizers.SGD(learning_rate=learnining_rate),
-                loss=tf.keras.losses.CategoricalCrossentropy(),
-                metrics=["accuracy"]
+                outputs=prediction,
             )
 
             full_model.summary()
@@ -64,7 +53,6 @@ class PrepareBaseModel:
                 classes = self.config.params_classes,
                 freeze_all=True,
                 freeze_till=None,
-                learnining_rate=self.config.params_learning_rate
             )
 
             self.save_model(

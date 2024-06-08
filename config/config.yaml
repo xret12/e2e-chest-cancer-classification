@@ -18,8 +18,11 @@ training:
   root_dir: artifacts/training
   trained_model_path: artifacts/training/model.h5
   training_data: artifacts/data_ingestion/Chest-CT-Scan-data
+  trained_model_path_for_tracking: model/model.h5
 
 
 evaluation:
   mlflow_uri: https://dagshub.com/xret12/e2e-chest-cancer-classification.mlflow
   
+prediction:
+  model: artifacts/training/model.h5
