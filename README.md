@@ -1,6 +1,7 @@
 # End-to-End Chest Cancer Classification ML Project
 - Deep learning: CNN model
 - Ops: MLFlow, DVC
+- https://www.youtube.com/watch?v=-NOIWzjJK-4&t=18199s&ab_channel=DSwithBappy
 
 ## Workflows (TO-DO)
 1. Update config.yaml
