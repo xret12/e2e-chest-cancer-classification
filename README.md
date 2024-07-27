@@ -2,10 +2,11 @@
 
 A deep learning-based machine learning project designed to diagnose cancerous conditions from chest xray images.
 
-<div style="text-align: center;">
-  <img src="img/webapp.jpg" alt="Alt text" style="width:100%;"/>
-  <p><em> Chest Cancer Classification Web App User Interface</em></p>
-</div>
+<p align="center">
+  <img src="img/webapp.jpg" alt="" width="100%">
+  <br>
+  <em>Chest Cancer Classification Web App User Interface</em>
+</p>
 
 ## Endpoints
 - **GET `/`** - home page
@@ -28,10 +29,11 @@ A deep learning-based machine learning project designed to diagnose cancerous co
 ## MLFlow Setup
 MLFlow Doumentation: https://mlflow.org/docs/latest/index.html
 
-<div style="text-align: center;">
-  <img src="img/mlflow.jpg" alt="Alt text" style="width:100%;"/>
-  <p><em>Sample MLFlow user interface</em></p>
-</div>
+<p align="center">
+  <img src="img/mlflow.jpg" alt="" width="100%">
+  <br>
+  <em>MLFlow User Interface</em>
+</p>
 
 
 1. Create a `Dagshub` account to host the MLFlow application: https://dagshub.com/
@@ -58,10 +60,12 @@ dvc repro
 
 For instance, your dataset has already been downloaded, your base model has already been created, and no changes have been made in youy hyperparameters, all pipeline stages will be skipped since DVC tracked that there is no input change.
 
-<div style="text-align: center;">
-  <img src="img/dvc.jpg" alt="Alt text" style="width:100%;"/>
-  <p><em>Sample DVC Run</em></p>
-</div>
+
+<p align="center">
+  <img src="img/dvc.jpg" alt="" width="100%">
+  <br>
+  <em>Sample DVC Run</em>
+</p>
 
 
 ## Continuous Integration & Continuous Deployment (CICD)
