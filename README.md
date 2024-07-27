@@ -1,11 +1,142 @@
 # End-to-End Chest Cancer Classification ML Project
-- Deep learning: CNN model
-- Ops: MLFlow, DVC
-- https://www.youtube.com/watch?v=-NOIWzjJK-4&t=18199s&ab_channel=DSwithBappy
 
-## Workflows (TO-DO)
+A deep learning-based machine learning project designed to diagnose cancerous conditions from chest xray images.
+
+<div style="text-align: center;">
+  <img src="img/webapp.jpg" alt="Alt text" style="width:100%;"/>
+  <p><em> Chest Cancer Classification Web App User Interface</em></p>
+</div>
+
+## Endpoints
+- **GET `/`** - home page
+- **GET, POST `/train`**- inititates the training pipeline
+- **POST `/predict`** - triggers the prediction process
+## TRAINING PIPELINE
+### 1. Data Ingestion
+- Downloaded image dataset from  https://drive.google.com/file/d/1z0mreUtRmR-P-magILsDR3T7M6IkGXtY/view?usp=sharing
+### 2. Base Model Preparation
+- Used `VGG16` as base pre-trained convolutional neural network model
+- Freezed the convolutional layers of the model to only allow the fully-connected layers (vanilla neural network) for training
+### 3. Model Training
+- Used `SKLearn ImageDataGenerator`to  setup the data generator for the training and validation data, with an optional augmentation based on the provided configuration
+
+### 4. Model Evaluation
+- Selected `loss` and `accuracy` scores as evaluation metrics
+- Integrated `MLFlow`to enable convenient experiment tracking with its UI functionalities
+
+
+## MLFlow Setup
+MLFlow Doumentation: https://mlflow.org/docs/latest/index.html
+
+<div style="text-align: center;">
+  <img src="img/mlflow.jpg" alt="Alt text" style="width:100%;"/>
+  <p><em>Sample MLFlow user interface</em></p>
+</div>
+
+
+1. Create a `Dagshub` account to host the MLFlow application: https://dagshub.com/
+2. After signing up, connect your Github repository of the project.
+3. Create environment variables to connect the MLFlow server with your code using credentials. You can use `.env` file and and load it with `python-dotenv` library in your code or simply input these commands in your terminal:
+```
+# FOR WINDOWS
+set MLFLOW_TRACKING_URI=<your-tracking-URI-found-in-Dagshub>
+set MLFLOW_TRACKING_USERNAME=<your-tracking-username-found-in-Dagshub>
+set MLFLOW_TRACKING_PASSWORD=<your-tracking-password-found-in-Dagshub>
+
+# FOR LINUX, replace 'set' with 'export'
+```
+
+## Training Pipeline Tracking using Data Version Control (DVC)
+DVC Documentation: https://dvc.org/doc
+
+To save execution time in experimentation, pipeline tracking is implemented. DVC tracks the output of each pipeline stage and skips it if the output of each stage already exists. Dependencies and outpus are mentioned in the `dvc.yaml` file.
+
+To run the the training pipeline with pipeline tracking:
+```
+dvc repro
+```
+
+For instance, your dataset has already been downloaded, your base model has already been created, and no changes have been made in youy hyperparameters, all pipeline stages will be skipped since DVC tracked that there is no input change.
+
+<div style="text-align: center;">
+  <img src="img/dvc.jpg" alt="Alt text" style="width:100%;"/>
+  <p><em>Sample DVC Run</em></p>
+</div>
+
+
+## Continuous Integration & Continuous Deployment (CICD)
+### 1. Configure AWS Access
+- Login to your `AWS Console` and create a `User` with access to the following:
+```
+a. AWS EC2 - Attach AmazonEC2FullAccess policy
+b. AWS ECR - Attach AmazonEC2ContainerRegistryFullAccess policy
+```
+### 2. Create Docker File
+Use the commands below to create the `Dockerfile` file
+```
+FROM python:3.8-slim-buster
+
+RUN apt update -y && apt install awscli -y
+WORKDIR /app
+
+COPY . /app
+RUN pip install -r requirements.txt
+
+CMD ["python3", "app.py"]
+```
+These commands will be installed in the `AWS EC2` instance that will be created later.
+
+### 3. Create ECR repository to store the Docker image
+- Save the URI of the repository. This looks like:
+```
+521740697242.dkr.ecr.us-east-1.amazonaws.com/e2e-chest-cancer-classif
+```
+### 4. Provision an EC2 instance
+- Choose `Ubuntu` as its operating system
+- Select `t2.large` as the instance type
+### 5. Install Docker in EC2 instance
+- Input these commands in sequential order to install Docker in your EC2 machine
+```
+# OPTIONAL
+
+sudo apt-get update -y
+
+sudo apt-get upgrade
+
+# REQUIRED
+
+curl -fsSL https://get.docker.com -o get-docker.sh
+
+sudo sh get-docker.sh
+
+sudo usermod -aG docker ubuntu
+
+newgrp docker
+```
+
+### 6. Prepare Github Workflow YAML file
+### 7. Set EC2 instance as self-hosted runner in Github
+ - In your Github project repository, go to `Settings` > `Actions` > `Runners` and click `New self-hosetd runner` button.
+ - Follow the instructions indicated in the page
+
+ ### 8. Setup Github Secrets 
+ - Populate Github Secrets with the following keys
+```
+AWS_ACCESS_KEY_ID = <aws-access-key-id>
+
+AWS_SECRET_ACCESS_KEY = <aws-secret-access-key>
+
+AWS_REGION = <region>
+
+AWS_ECR_LOGIN_URI = <ecr-repo-uri>
+
+ECR_REPOSITORY_NAME = <ecr-repo-name>
+ ```
+
+
+**********************************************
+## Coding Sequence
 1. Update config.yaml
-2. Update secrets.yaml [optional]
 3. Update params.yaml
 4. Update the entity
 5. Update the config manager in src config
@@ -14,76 +145,3 @@
 8. Update the main.py
 9. Update the dvc.yaml
 
-
-## DAGSHUB Connection for MLFLOW (windows machine)
-- SET for windows / EXPORT for linux
-
-```
-MLFLOW_TRACKING_URI=https://dagshub.com/xret12/e2e-chest-cancer-classification.mlflow
-
-MLFLOW_TRACKING_USERNAME=xret12
-
-MLFLOW_TRACKING_PASSWORD=c05d9ad81ab52d7ad65f1197d91df0ab2f92d11f
-
-```
-
-## AWS-CICD-Deployment-with-Github-Actions
-### 1. Login to AWS console.
-### 2. Create IAM user for deployment
-    #with specific access
-
-    1. EC2 access : It is virtual machine
-
-    2. ECR: Elastic Container registry to save your docker image in aws
-
-
-#### Description: About the deployment
-
-1. Build docker image of the source code
-
-2. Push your docker image to ECR
-
-3. Launch Your EC2 
-
-4. Pull Your image from ECR in EC2
-
-5. Lauch your docker image in EC2
-
-#### Policy:
-
-1. AmazonEC2ContainerRegistryFullAccess
-
-2. AmazonEC2FullAccess
-### 3. Create ECR repo to store/save docker image
- Save the repository URI
-
-    521740697242.dkr.ecr.us-east-1.amazonaws.com/e2e-chest-cancer-classif
-### 4. Create EC2 machine (Ubuntu)
-### 5. Open EC2 and Install docker in EC2 Machine:
-    #optional
-
-    sudo apt-get update -y
-
-    sudo apt-get upgrade
-
-    #required
-
-    curl -fsSL https://get.docker.com -o get-docker.sh
-
-    sudo sh get-docker.sh
-
-    sudo usermod -aG docker ubuntu
-
-    newgrp docker
-### 6. Configure EC2 as self-hosted runner:
-    setting>actions>runner>new self hosted runner> choose os> then run command one by one
-### 7. Setup github secrets:
-    AWS_ACCESS_KEY_ID=
-
-    AWS_SECRET_ACCESS_KEY=
-
-    AWS_REGION = us-east-1
-
-    AWS_ECR_LOGIN_URI = 521740697242.dkr.ecr.us-east-1.amazonaws.com
-
-    ECR_REPOSITORY_NAME = e2e-chest-cancer-classif
