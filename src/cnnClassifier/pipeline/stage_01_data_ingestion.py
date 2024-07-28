@@ -12,6 +12,23 @@ class DataIngestionTrainingPipeline:
 
     
     def main(self):
+        """
+        Executes the data ingestion pipeline.
+
+        This method performs the following steps:
+        1. Logs the start of the data ingestion stage.
+        2. Retrieves the configuration for data ingestion using the ConfigurationManager.
+        3. Creates a DataIngestion object with the retrieved configuration.
+        4. Downloads the file using the DataIngestion object.
+        5. Extracts the zip file using the DataIngestion object.
+        6. Logs the completion of the data ingestion stage.
+
+        Raises:
+            Exception: If any exception occurs during the execution of the data ingestion stage.
+
+        Returns:
+            None
+        """
         try:
             logger.info(f">>>>>>>>>>>>>> {STAGE_NAME} STARTED <<<<<<<<<<<<<<<")
             config = ConfigurationManager()

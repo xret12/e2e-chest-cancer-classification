@@ -11,6 +11,20 @@ class ModelTrainingPipeline:
 
     
     def main(self):
+        """
+        The main function that trains a model using the Training class. It performs the following steps:
+        
+        1. Logs the start of the training stage.
+        2. Retrieves the training configuration from the ConfigurationManager.
+        3. Creates an instance of the Training class with the retrieved configuration.
+        4. Retrieves the base model using the Training class.
+        5. Generates the training and validation generators using the Training class.
+        6. Trains the model using the Training class.
+        7. Logs the completion of the training stage.
+        
+        Raises:
+            Exception: If an exception occurs during the training process.
+        """
         try:
             logger.info(f">>>>>>>>>>>>>> {STAGE_NAME} STARTED <<<<<<<<<<<<<<<")
             config = ConfigurationManager()

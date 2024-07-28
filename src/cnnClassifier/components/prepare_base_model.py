@@ -11,6 +11,18 @@ class PrepareBaseModel:
 
     
     def get_base_model(self):
+        """
+        Initializes the base model for the classifier.
+
+        This function creates a VGG16 model with the specified input shape, weights, and whether to include the top layer.
+        The initialized model is then saved to the specified base model path.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         self.model = tf.keras.applications.vgg16.VGG16(
             input_shape=self.config.params_image_size,
             weights=self.config.params_weights,
@@ -26,27 +38,59 @@ class PrepareBaseModel:
                             classes: int, 
                             freeze_all: bool, 
                             freeze_till: int):
-            if freeze_all: 
-                for layer in model.layers:
-                    layer.trainable = False
-            elif (freeze_till is not None) and (freeze_all > 0):
-                for layer in model.layers[:-freeze_till]:
-                    layer.trainable = False
+        """
+        Prepare a full model by freezing certain layers of the given base model.
 
-            # The model output (output of the convolutional layers) is flattened to 1D
-            flatten_in = tf.keras.layers.Flatten()(model.output)
-            prediction = tf.keras.layers.Dense(classes, activation='softmax')(flatten_in)
+        Args:
+            model (tf.keras.Model): The base model to prepare.
+            classes (int): The number of classes for the output layer.
+            freeze_all (bool): Whether to freeze all layers of the base model.
+            freeze_till (int): The number of layers to freeze from the end of the base model.
 
-            full_model = tf.keras.models.Model(
-                inputs=model.input,
-                outputs=prediction,
-            )
+        Returns:
+            tf.keras.Model: The prepared full model.
 
-            full_model.summary()
-            return full_model
+        """
+        if freeze_all: 
+            for layer in model.layers:
+                layer.trainable = False
+        elif (freeze_till is not None) and (freeze_all > 0):
+            for layer in model.layers[:-freeze_till]:
+                layer.trainable = False
+
+        # The model output (output of the convolutional layers) is flattened to 1D
+        flatten_in = tf.keras.layers.Flatten()(model.output)
+        prediction = tf.keras.layers.Dense(classes, activation='softmax')(flatten_in)
+
+        full_model = tf.keras.models.Model(
+            inputs=model.input,
+            outputs=prediction,
+        )
+
+        full_model.summary()
+        return full_model
         
     
     def update_base_model(self):
+        """
+        Updates the base model by preparing a full model with frozen layers and saving it to the specified path.
+
+        This function first prepares a full model by freezing all layers of the base model using the `_prepare_full_model` method.
+        The `model` parameter is the base model to prepare, `classes` is the number of classes for the output layer,
+        `freeze_all` is a boolean indicating whether to freeze all layers of the base model, and `freeze_till` is the number of layers
+        to freeze from the end of the base model.
+
+        After preparing the full model, it saves the model to the specified path using the `save_model` method.
+        The `path` parameter is the path to save the model to, and `model` is the full model to save.
+
+        If an exception is raised during the process, it logs the exception using the `logger` and re-raises it.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         try:
             self.full_model = self._prepare_full_model(
                 model = self.model,
@@ -67,6 +111,16 @@ class PrepareBaseModel:
 
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
+        """
+        Save a Keras model to a specified path.
+
+        Args:
+            path (Path): The path where the model will be saved.
+            model (tf.keras.Model): The Keras model to be saved.
+
+        Returns:
+            None
+        """
         model.save(path)
 
     

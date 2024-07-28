@@ -12,13 +12,28 @@ class EvaluationPipeline:
 
 
     def main(self):
+        """
+        This function performs the following steps:
+        1. Logs the start of the stage.
+        2. Retrieves the evaluation configuration from the ConfigurationManager.
+        3. Creates an instance of the Evaluation class with the evaluation configuration.
+        4. Calls the evaluate method of the Evaluation instance.
+        5. Activates MLFlow tracking.
+        6. Logs the completion of the stage.
+
+        Raises:
+            Exception: If any exception occurs during the execution of the function.
+
+        Returns:
+            None
+        """
         try:
             logger.info(f">>>>>>>>>>>>>> {STAGE_NAME} STARTED <<<<<<<<<<<<<<<")
             config = ConfigurationManager()
             evaluation_config = config.get_evaluation_config()
             evaluation = Evaluation(config=evaluation_config)
             evaluation.evaluate()
-            # evaluation.log_into_mlflow()
+            evaluation.log_into_mlflow()
             logger.info(f">>>>>>>>>>>>>> {STAGE_NAME} COMPLETED <<<<<<<<<<<<<<<\n")
             
         except Exception as e:

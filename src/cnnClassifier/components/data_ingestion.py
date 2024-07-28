@@ -13,6 +13,23 @@ class DataIngestion:
 
     
     def download_file(self):
+        """
+        Downloads a file from a specified URL and saves it to a local directory.
+
+        This method attempts to download a file from a given URL and save it to a specified local directory.
+        The URL is obtained from the `source_url` attribute of the `config` object, while the local directory
+        is obtained from the `local_data_file` attribute of the `config` object.
+
+        Parameters:
+            self (DataIngestion): The instance of the DataIngestion class.
+
+        Returns:
+            None
+
+        Raises:
+            Exception: If an error occurs during the download process, the exception is logged and re-raised.
+
+        """
         try:
             dataset_url = self.config.source_url
             zip_download_dir = self.config.local_data_file
@@ -30,6 +47,22 @@ class DataIngestion:
         
 
     def extract_zip_file(self):
+        """
+        Extracts the contents of a zip file to a specified directory.
+
+        This method takes the downloaded zip file from the `local_data_file` attribute of the `config` object
+        and extracts its contents to the directory specified by the `unzip_dir` attribute of the `config` object.
+        The `unzip_dir` directory is created if it does not exist.
+
+        Parameters:
+            self (DataIngestion): The instance of the DataIngestion class.
+
+        Returns:
+            None
+
+        Raises:
+            Exception: If an error occurs during the extraction process, the exception is logged and re-raised.
+        """
         try:
             unzip_path = self.config.unzip_dir 
             zip_download_dir = self.config.local_data_file

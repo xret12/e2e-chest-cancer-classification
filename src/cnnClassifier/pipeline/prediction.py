@@ -10,6 +10,27 @@ class PredictionPipeline:
 
 
     def predict(self):
+        """
+        Predicts the class of an image using a pre-trained model.
+
+        This method loads a pre-trained model, loads an image from the specified filename,
+        resizes it to 224x224 pixels, converts it to a numpy array, and passes it through the
+        model to obtain a prediction. The predicted class is then determined based on the
+        maximum value in the prediction array.
+
+        Parameters:
+            self (PredictionPipeline): The instance of the PredictionPipeline class.
+
+        Returns:
+            list: A list containing a dictionary with a single key-value pair. The key is
+            "image" and the value is the predicted class, either "Normal" or "Adenocarcinoma
+            Cancer".
+
+        Example:
+            prediction_pipeline = PredictionPipeline("image.jpg")
+            prediction = prediction_pipeline.predict()
+            print(prediction)  # Output: [{"image": "Normal"}]
+        """
         model = load_model(os.path.join("model", "model.h5"))
 
         image_name = self.filename

@@ -12,6 +12,15 @@ class Training:
 
 
     def get_base_model(self):
+        """
+        Load the base model from the specified path and compile it with the specified optimizer, loss function, and metrics.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         self.model = tf.keras.models.load_model(self.config.updated_base_model_path, compile=False)
         
         self.model.compile(
@@ -22,7 +31,13 @@ class Training:
 
 
     def train_valid_generator(self):
+        """
+        Initializes the training and validation generators for the model.
 
+        This function sets up the training and validation generators for the model by loading the data from the specified directory.
+        The data is preprocessed using the ImageDataGenerator class from TensorFlow. 
+        The generators are configured with the specified parameters such as rescaling, validation split, target size, batch size, and interpolation.
+        """
         datagenerator_kwargs = dict(
             rescale = 1./255,
             validation_split = 0.20
@@ -68,10 +83,37 @@ class Training:
     
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
+        """
+        Save a Keras model to a specified path.
+
+        Args:
+            path (Path): The path where the model will be saved.
+            model (tf.keras.Model): The Keras model to be saved.
+
+        Returns:
+            None
+        """
         model.save(path)
 
 
     def train(self):
+        """
+        Trains the model using the train and validation generators, and saves the trained model to two different paths.
+
+        This function calculates the number of steps per epoch and the number of validation steps based on the batch size of the train and validation generators. 
+        It then logs the class indices of the train and validation generators.
+
+        The model is trained using the train generator with the specified number of epochs and steps per epoch. 
+        The validation data is provided by the validation generator with the specified number of validation steps.
+
+        After training, the model is saved to two different paths: the configured trained model path and the configured trained model path for tracking.
+
+        Parameters:
+            self (ModelTrainer): The instance of the ModelTrainer class.
+        
+        Returns:
+            None
+        """
         self.steps_per_epoch = self.train_generator.samples // self.train_generator.batch_size
         self.validation_steps = self.valid_generator.samples // self.valid_generator.batch_size
 
