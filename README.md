@@ -58,7 +58,7 @@ To run the the training pipeline with pipeline tracking:
 dvc repro
 ```
 
-For instance, your dataset has already been downloaded, your base model has already been created, and no changes have been made in youy hyperparameters, all pipeline stages will be skipped since DVC tracked that there is no input change.
+For instance, your dataset has already been downloaded, your base model has already been created, and no changes have been made in your hyperparameters, all pipeline stages will be skipped since DVC tracked that there is no input change.
 
 
 <p align="center">
