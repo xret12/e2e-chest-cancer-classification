@@ -27,7 +27,7 @@ A deep learning-based machine learning project designed to diagnose cancerous co
 
 
 ## MLFlow Setup
-MLFlow Doumentation: https://mlflow.org/docs/latest/index.html
+MLFlow Documentation: https://mlflow.org/docs/latest/index.html
 
 <p align="center">
   <img src="img/mlflow.jpg" alt="" width="100%">
